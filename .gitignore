@@ -62,3 +62,8 @@ typings/
 
 # others
 .wwebjs_cache
+
+localAuth/*
+./localAuth/*
+./localAuth
+localAuth/
