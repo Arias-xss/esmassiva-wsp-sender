@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "restart-connection": "powershell -Command \"Remove-Item -Path 'C:\\Users\\ADMIN\\Code\\esmassiva-wsp-sender\\localAuth' -Recurse -Force; yarn start\"",
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
