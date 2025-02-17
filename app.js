@@ -1,16 +1,20 @@
 var express = require('express')
 var bodyParser = require('body-parser');
 var logger = require('morgan');
-const { Client, NoAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const normalizarTelefono = require('./util');
 
 var app = express();
 const client = new Client({
     puppeteer: {
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     },
-    authStrategy: new NoAuth()
+    authStrategy: new LocalAuth({
+        clientId: 'esmassiva-sender',
+        dataPath: 'localAuth'
+    })
 });
 
 app.use(logger('dev'));
@@ -32,12 +36,9 @@ client.initialize();
 
 // Routes
 app.post('/send-message', async (req, res) => {
-    console.log(req.body)
-
     const number = normalizarTelefono(req.body.phone_number);
 
     const number_details = await client.getNumberId(number); // get mobile number details
-    console.log(number_details)
 
     if (number_details) {
         await client.sendMessage(number_details._serialized, req.body.message); // send message
